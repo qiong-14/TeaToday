@@ -1,7 +1,7 @@
 # Tea Today
 > MoYu的刷题记录，对于每一道题，重写一遍解答也会收获颇丰，本项目用以对每日算法题的记录，如果你也感兴趣，那就一起来刷题吧！
 
-## [Recover the string](https://codeforces.com/problemset/problem/708/B)
+## [Recover the string](https://codeforces.com/problemset/problem/708/B)CF708B
 
 输入四个数表示**只由0和1组成的字符串s**中**长为2的子序列**00，01，10，11的个数，如果能构造出这样的字符串请输出一个解，不能则输出Impossible。
 
