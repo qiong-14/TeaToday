@@ -1,7 +1,7 @@
 # Tea Today
 > MoYu的刷题记录，对于每一道题，重写一遍解答也会收获颇丰，本项目用以对每日算法题的记录，如果你也感兴趣，那就一起来刷题吧！
 
-## [Recover the string](https://codeforces.com/problemset/problem/708/B)CF708B
+## CF708B [Recover The String](https://codeforces.com/problemset/problem/708/B)
 
 输入四个数表示**只由0和1组成的字符串s**中**长为2的子序列**00，01，10，11的个数，如果能构造出这样的字符串请输出一个解，不能则输出Impossible。
 
@@ -98,4 +98,136 @@ int main() {
 ```
 
 
+
+## CF1385E [Directing Edges](https://codeforces.com/contest/1385/problem/E)
+
+给定一个有n个顶点的图的m条边，m条边存在无向边和有向边。请将所有的无向边变成有向，若存在一种方法让该图成为一个有向无环图，输出所有边，否则输出No。
+
+```c
+// input
+4 //t
+3 1 //m n
+0 1 3 // 第一个数字0表示无向，1表示有向，后面两个数字为顶点，若为有向，则顶点1指向顶点2
+5 5
+0 2 1
+1 1 5
+1 5 4
+0 5 2
+1 3 5
+4 5
+1 1 2
+0 4 3
+1 3 1
+0 2 3
+1 2 4
+4 5
+1 4 1
+1 1 3
+0 1 2
+1 2 4
+1 3 2
+```
+
+* 解析
+
+我们首先只考虑给定的所有有向边，若对所有顶点进行拓扑排序之后不存在环，我们则可以按照拓扑排序之后的顺序将所有无向边进行构造，若拓扑排序有环的话则不可以。
+
+有关拓扑排序，我们可以按算法导论书中的思路，用三种颜色标记顶点， 当访问到的顶点之前正在访问时，说明存在环，若不是，则继续在该节点DFS，这样就会返还一个order数组，order中下标越靠前的顶点先访问到。
+
+```c++
+enum color{white, gray, black};
+vector<int> order;
+vector<color> color;
+bool DFS(vector<vector<int>> &g,int  u)
+{
+    // 正在访问
+    colors[u] = gray;
+    // 访问u指向的顶点v
+    for(auto v : g[u]) {
+        if (colors[v] == gray) return false;
+        if (colors[v] == white && !DFS(g, v)) return false;
+    }
+    // 访问结束
+    colors[u] = black;
+    // 放入order中
+    order.push_back(u);
+    return true;
+}
+```
+
+
+
+* 代码
+
+```c++
+#include<iostream>
+#include<vector>
+using namespace std;
+
+
+vector<int> ord;
+vector<vector<int>> g;
+vector<int> color;
+
+
+    
+// 单个顶点dfs
+bool dfs(vector<vector<int>> &g, int u) {
+    color[u] = 1;
+    for(auto v : g[u]) {
+        if (color[v] == 1) return false;
+        if (color[v] == 0 && !dfs(g, v)) return false;
+    }
+    color[u] = 2;
+    ord.push_back(u);
+    return true;
+}
+
+// 所有顶点dfs
+bool tpdfs(vector<vector<int>> &g, int n) {
+    for (int i = 0; i < n; i++) {
+        if (color[i] == 0 && !dfs(g, i)) return false;
+    }
+    return true;
+}
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, m;
+        cin >> n >> m;
+        g = vector<vector<int>>(n);
+        vector<vector<int>> edges;
+        for(int i = 0; i < m; i++) {
+            int a,b,c;
+            cin >> a >> b >>c;
+            b--;c--;
+            edges.push_back({b,c});
+            if(a==1){
+                g[b].push_back(c);
+            }
+        }
+        ord.clear();
+        color = vector<int> (n);
+        if (!tpdfs(g, n)) {
+            cout << "No" << endl;
+        } else {
+            cout << "Yes" << endl;
+            vector<int> pos(n);
+            for(int i = 0; i < n; i++) {
+                pos[ord[i]] = i;
+            }
+            for(int i = 0; i < m; i++) {
+                if(pos[edges[i][0]] < pos[edges[i][1]]) {
+                    cout << edges[i][1] + 1 << ' ' << edges[i][0] + 1 << endl;
+                } else {
+                    cout << edges[i][0] + 1 << ' ' << edges[i][1] + 1 << endl;
+                }
+            }
+        }
+    }
+    return 0;
+}
+```
 
