@@ -1,2 +1,3 @@
 a.*
 .vscode
+[a-zA-Z].cpp
