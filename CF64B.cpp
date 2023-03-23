@@ -10,7 +10,6 @@ int main() {
         string s;
         cin >> s;        
         sort(s.begin(), s.end());
-
         string s1 = "",s2 = "";
         for(auto &c : s) {
             if(c&1) s1+=c;
